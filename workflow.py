@@ -35,7 +35,11 @@ def process_learning_goal(goal: str, progress_callback=None) -> Dict[str, Any]:
         seen_book_ids = set()
         
         for k_set in keyword_sets:
-            books = books_api.search_books(k_set, max_results=2)
+            try:
+                books = books_api.search_books(k_set, max_results=2)
+            except Exception as search_err:
+                return {"error": f"Error fetching from Google Books API for queries {k_set}: {str(search_err)}"}
+                
             for book in books:
                 if book["id"] not in seen_book_ids:
                     seen_book_ids.add(book["id"])
