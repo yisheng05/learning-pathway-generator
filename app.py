@@ -34,7 +34,9 @@ if submitted and user_goal:
     st.session_state.pathway_result = None  # Reset previous result
     
     if not os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY") == "your_api_key_here":
-        st.error("Please set your GEMINI_API_KEY in the .env file before running the application.")
+        st.error("Please set your GEMINI_API_KEY in the Stremlit Cloud Secrets or local .env file before running the application.")
+    elif not os.environ.get("GOOGLE_BOOKS_API_KEY") or os.environ.get("GOOGLE_BOOKS_API_KEY") == "your_google_books_api_key_here":
+        st.error("Please set your GOOGLE_BOOKS_API_KEY in the Streamlit Cloud Secrets or local .env file before running the application.")
     else:
         with st.status("Building your learning pathway...", expanded=True) as status:
             progress_bar = st.progress(0)

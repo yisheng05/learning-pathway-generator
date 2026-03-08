@@ -2,6 +2,8 @@ import requests
 import urllib.parse
 from typing import List, Dict, Any
 
+import os
+
 def search_books(keywords: List[str], max_results: int = 3) -> List[Dict[str, Any]]:
     """
     Search Google Books API using a set of keywords.
@@ -9,6 +11,10 @@ def search_books(keywords: List[str], max_results: int = 3) -> List[Dict[str, An
     """
     query = "+".join([urllib.parse.quote(kw) for kw in keywords])
     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&maxResults={max_results}&langRestrict=en"
+    
+    api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
+    if api_key:
+        url += f"&key={api_key}"
     
     response = requests.get(url)
     response.raise_for_status()
