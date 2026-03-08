@@ -99,6 +99,6 @@ if st.session_state.pathway_result and "pathway" in st.session_state.pathway_res
                             st.markdown(f"**Search Query Used:** `{' '.join(keywords)}`")
                             
                             if book.get("info_link"):
-                                st.markdown(f"[View on Google Books]({book['info_link']})")
+                                st.markdown(f"[View on Open Library]({book['info_link']})")
             
             st.divider()
