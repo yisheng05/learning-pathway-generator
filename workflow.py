@@ -40,23 +40,27 @@ def process_learning_goal(goal: str, progress_callback=None) -> Dict[str, Any]:
                 if book["id"] not in seen_book_ids:
                     seen_book_ids.add(book["id"])
                     
-                    # Evaluate relevance
-                    evaluation = llm_utils.evaluate_book(
-                        goal=goal,
-                        theme=theme,
-                        book_title=book["title"],
-                        book_description=book["description"],
-                        authors=book["authors"]
-                    )
-                    
-                    if evaluation and evaluation.is_relevant:
-                        theme_books.append({
-                            "book_info": book,
-                            "reasoning": evaluation.reasoning,
-                            "keywords_used": k_set
-                        })
+                    try:
+                        # Evaluate relevance
+                        evaluation = llm_utils.evaluate_book(
+                            goal=goal,
+                            theme=theme,
+                            book_title=book["title"],
+                            book_description=book["description"],
+                            authors=book["authors"]
+                        )
                         
-                        # Once we find 2 good books for a theme, we can move on to the next theme
+                        if evaluation and evaluation.is_relevant:
+                            theme_books.append({
+                                "book_info": book,
+                                "reasoning": evaluation.reasoning,
+                                "keywords_used": k_set
+                            })
+                    except Exception as eval_err:
+                        print(f"Error evaluating book {book['title']}: {eval_err}")
+                        return {"error": f"Error during Gemini evaluation of book '{book['title']}': {str(eval_err)}"}
+                        
+                    # Once we find 2 good books for a theme, we can move on to the next theme
                         if len(theme_books) >= 2:
                             break
             if len(theme_books) >= 2:
