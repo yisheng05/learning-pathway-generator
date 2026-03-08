@@ -10,7 +10,7 @@ class ThemeList(BaseModel):
     themes: List[str] = Field(description="A list of 3-5 distinct learning themes extracted from the user's goal")
 
 class KeywordSets(BaseModel):
-    keyword_sets: List[List[str]] = Field(description="A list of keyword sets. Each set is a list of strings representing a search query for Google Books.")
+    keyword_sets: List[List[str]] = Field(description="A list of keyword sets. Each set is a list of strings representing a search query for Google Books. The total number of words across all strings in a single set MUST be 6 or fewer.")
 
 class BookEvaluation(BaseModel):
     is_relevant: bool = Field(description="Whether the book is highly relevant to the goal and theme")
@@ -33,7 +33,7 @@ def extract_themes(goal: str) -> List[str]:
 
 def generate_keywords(theme: str) -> List[List[str]]:
     """Generate different sets of search keywords for a specific learning theme."""
-    prompt = f"For the learning theme '{theme}', generate 3 different sets of search keywords. Each set should contain 2-4 keywords that can be used to query a book database. Make the sets diverse (e.g., one theoretical, one practical, one beginner-focused)."
+    prompt = f"For the learning theme '{theme}', generate 3 different sets of search keywords. Each set should contain 2-4 keywords that can be used to query a book database, but the TOTAL number of words in a set MUST NOT exceed 6 words. Make the sets diverse (e.g., one theoretical, one practical, one beginner-focused)."
     
     response = client.models.generate_content(
         model='gemini-2.5-flash',
